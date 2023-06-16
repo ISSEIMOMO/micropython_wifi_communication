@@ -1,6 +1,29 @@
 class Ci:
 
-    def __init__(self, Host='50.1', tr=1024):
+    def __init__(self, net=None, Host='50.1', tr=1024):
+
+        if net:
+            if type(net) != dict:
+                net = {}
+            import network
+            sta_if = network.WLAN(network.STA_IF)
+            if not sta_if.isconnected():
+                print('Conectando-se à rede Wi-Fi...')
+                sta_if.active(True)
+                ssid = ''
+                if 'ssid' in net:
+                    ssid = net['ssid']
+                password = ''
+                if 'password' in net:
+                    password = net['password']
+                if password != '':
+                    sta_if.connect(ssid, password)
+                else:
+                    sta_if.connect(ssid)
+                while not sta_if.isconnected():
+                    pass
+
+
         import socket
         self.trans = tr
         self.HOST = '192.168.' + Host  # Endereço IP do servidor
@@ -36,5 +59,15 @@ class Ci:
             self.ence()
 
     def ence(self):
-        self.client_socket.connect((self.HOST, self.PORT))
-        self.client_socket.settimeout(300)
+        try:
+            self.client_socket.connect((self.HOST, self.PORT))
+            self.client_socket.settimeout(300)
+        except:
+            self.ence()
+
+
+c = Ci()
+from time import sleep
+while True:
+    print(c.recv())
+    sleep(1)

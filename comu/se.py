@@ -67,9 +67,12 @@ class Se:
             self.ence()
 
     def ence(self):
-        # self.client_socket.close()
-        self.server_socket.listen(1)
-        # Aceita uma nova conexão
-        self.client_socket, self.client_address = self.server_socket.accept()
-        self.client_socket.settimeout(300)
-        print("cliente aceito")
+        try:
+            # self.client_socket.close()
+            self.server_socket.listen(1)
+            # Aceita uma nova conexão
+            self.client_socket, self.client_address = self.server_socket.accept()
+            self.client_socket.settimeout(300)
+            print("cliente aceito")
+        except:
+            self.ence()
