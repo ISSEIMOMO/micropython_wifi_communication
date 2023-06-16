@@ -1,4 +1,4 @@
-class Ci:
+class ci:
 
     def __init__(self, net=None, Host='50.1', tr=1024):
 
@@ -64,10 +64,3 @@ class Ci:
             self.client_socket.settimeout(300)
         except:
             self.ence()
-
-
-c = Ci()
-from time import sleep
-while True:
-    print(c.recv())
-    sleep(1)

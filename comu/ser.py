@@ -1,4 +1,4 @@
-class Se:
+class se:
 
     def __init__(self, net=None, Host='50.1', tr=1024):
         self.trans = tr
