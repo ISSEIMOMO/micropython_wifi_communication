@@ -1,11 +1,29 @@
+import socket
+import network
+from comu.util import validator
+from time import sleep
+
 class ci:
 
     def __init__(self, net=None, Host='50.1', tr=1024):
+        self.net = net
+        self.cone()
+        self.trans = tr
+        self.HOST = '192.168.' + Host  # Endereço IP do servidor
+        self.PORT = 1234  # Porta para comunicação
 
+        # Cria o socket TCP/IP
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.settimeout(None)
+        # Conecta-se ao servidor
+        self.client_socket.connect((self.HOST, self.PORT))
+        self.client_socket.settimeout(300)
+
+    def cone(self):
+        net = self.net
         if net:
             if type(net) != dict:
                 net = {}
-            import network
             sta_if = network.WLAN(network.STA_IF)
             if not sta_if.isconnected():
                 print('Conectando-se à rede Wi-Fi...')
@@ -23,19 +41,6 @@ class ci:
                 while not sta_if.isconnected():
                     pass
 
-
-        import socket
-        self.trans = tr
-        self.HOST = '192.168.' + Host  # Endereço IP do servidor
-        self.PORT = 1234  # Porta para comunicação
-
-        # Cria o socket TCP/IP
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_socket.settimeout(None)
-        # Conecta-se ao servidor
-        self.client_socket.connect((self.HOST, self.PORT))
-        self.client_socket.settimeout(300)
-
     def send(self, data):
         try:
             self.client_socket.settimeout(5)
@@ -46,7 +51,6 @@ class ci:
             self.ence()
 
     def recv(self):
-        from util import validator
         try:
             message = self.client_socket.recv(self.trans).decode()
             if not message:
@@ -59,8 +63,17 @@ class ci:
             self.ence()
 
     def ence(self):
-        try:
-            self.client_socket.connect((self.HOST, self.PORT))
-            self.client_socket.settimeout(300)
-        except:
-            self.ence()
+        x = None
+        self.client_socket.close()
+        while not x:
+            try:
+                wlan = network.WLAN(network.STA_IF)
+                if not wlan.isconnected():
+                    self.cone()
+                self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.client_socket.connect((self.HOST, self.PORT))
+                self.client_socket.settimeout(300)
+                x = True
+            except Exception as e:
+                pass
+            sleep(1)

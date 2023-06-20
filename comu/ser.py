@@ -1,14 +1,17 @@
+import socket
+import network
+from comu.util import validator
+
+
 class se:
 
     def __init__(self, net=None, Host='50.1', tr=1024):
         self.trans = tr
-        import socket
         self.HOST = '192.168.' + Host  # Endereço IP do servidor
         self.PORT = 1234  # self.PORTa para comunicação
         if net:
             if type(net) != dict:
                 net = {}
-            import network
             SSID = 'MinhaRedeWiFI'  # Nome da rede Wi-Fi
             if 'SSID' in net:
                 SSID = net['SSID']
@@ -54,7 +57,6 @@ class se:
             self.ence()
 
     def recv(self):
-        from util import validator
         try:
             message = self.client_socket.recv(self.trans).decode()
             if not message:
