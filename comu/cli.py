@@ -7,7 +7,14 @@ class ci:
 
     def __init__(self, net=None, Host='50.1', tr=1024):
         self.net = net
-        self.cone()
+        x = None
+        while not x:
+            try:
+                self.cone()
+                x = True
+            except:
+                pass
+            sleep(1)
         self.trans = tr
         self.HOST = '192.168.' + Host  # Endereço IP do servidor
         self.PORT = 1234  # Porta para comunicação
@@ -28,10 +35,10 @@ class ci:
             if not sta_if.isconnected():
                 print('Conectando-se à rede Wi-Fi...')
                 sta_if.active(True)
-                ssid = ''
+                ssid = 'MinhaRedeWiFI'
                 if 'ssid' in net:
                     ssid = net['ssid']
-                password = ''
+                password = 'MinhaSenha123'
                 if 'password' in net:
                     password = net['password']
                 if password != '':
