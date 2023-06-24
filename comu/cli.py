@@ -1,4 +1,5 @@
 import socket
+
 netw = True
 try:
     import network
@@ -6,6 +7,7 @@ except:
     netw = False
 from comu.util import validator, ip
 from time import sleep
+
 
 class ci:
 
@@ -21,9 +23,11 @@ class ci:
             sleep(1)
         self.trans = tr
         self.HOST = Host  # Endereço IP do servidor
-        self.HOST = ip(self.HOST)[0]
-        print(self.HOST)
-        self.PORT = 1234  # Porta para comunicação
+        try:
+            self.HOST = ip(self.HOST, self.ifconfig)[0]
+        except:
+            self.HOST = ip(self.HOST)[0]
+        self.PORT = 1238  # Porta para comunicação
 
         # Cria o socket TCP/IP
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,7 +44,6 @@ class ci:
                 net = {}
             sta_if = network.WLAN(network.STA_IF)
             if not sta_if.isconnected():
-                print('Conectando-se à rede Wi-Fi...')
                 sta_if.active(True)
                 ssid = 'MinhaRedeWiFI'
                 if 'ssid' in net:
@@ -54,6 +57,7 @@ class ci:
                     sta_if.connect(ssid)
                 while not sta_if.isconnected():
                     pass
+            self.ifconfig = sta_if.ifconfig()
 
     def send(self, data):
         try:
@@ -64,17 +68,29 @@ class ci:
         except:
             self.ence()
 
+    def close(self):
+        self.send('jnhvcdtyGHAJHDGDHgftghjnhbftryuikjnbhgvfrtyuiokmnbvgcfrtyuikjnbhvcfrtyui75414578445445741574')
+        self.client_socket.close()
+        raise Exception("Servidor finalizado!")
+
     def recv(self):
+        x = None
         try:
             message = self.client_socket.recv(self.trans).decode()
             if not message:
                 self.ence()
             self.client_socket.settimeout(None)
             va, me = validator(message)
-            if not va:
-                return me['inf']
+            me = me['inf']
+            if me == 'jnhvcdtyGHAJHDGDHgftghjnhbftryuikjnbhgvfrtyuiokmnbvgcfrtyuikjnbhvcfrtyui75414578445445741574':
+                x = True
+            elif not va:
+                return me
         except:
             self.ence()
+        if x:
+            self.client_socket.close()
+            raise Exception("Servidor finalizado pelo server!")
 
     def ence(self):
         x = None

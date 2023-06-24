@@ -58,3 +58,7 @@ send
         c.send(x)
         x+=1
         sleep(1)
+
+close server
+    
+    c.close() # or s.close()

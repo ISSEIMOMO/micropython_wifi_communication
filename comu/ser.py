@@ -23,7 +23,6 @@ class se:
                 self.cone()
                 x = True
             except Exception as e:
-                print(e)
                 pass
             sleep(1)
 
@@ -39,7 +38,6 @@ class se:
         # Aceita uma nova conexão
         self.client_socket, self.client_address = self.server_socket.accept()
         self.client_socket.settimeout(300)
-        print("cliente aceito")
 
     def cone(self):
         net = self.net
@@ -71,22 +69,16 @@ class se:
             else:
                 sta_if = network.WLAN(network.STA_IF)
                 if not sta_if.isconnected():
-                    print('Conectando-se à rede Wi-Fi...')
                     sta_if.active(True)
                     if PASSWORD != '':
-                        print(SSID, PASSWORD)
                         sta_if.connect(SSID, PASSWORD)
                     else:
                         sta_if.connect(SSID)
                     while not sta_if.isconnected():
                         pass
-                print(sta_if.ifconfig())
-                print(ip(self.HOST, sta_if.ifconfig(),se=True))
                 ap_config = ip(self.HOST, sta_if.ifconfig(),se=True)
                 self.HOST = ap_config[0]
-                print(self.HOST, ap_config)
                 sta_if.ifconfig(ap_config)
-                print(sta_if.ifconfig())
         else:
             self.HOST = ip(self.HOST,se=True)[0]
 
@@ -99,17 +91,29 @@ class se:
         except:
             self.ence()
 
+    def close(self):
+        self.send('jnhvcdtyGHAJHDGDHgftghjnhbftryuikjnbhgvfrtyuiokmnbvgcfrtyuikjnbhvcfrtyui75414578445445741574')
+        self.client_socket.close()
+        raise Exception("Servidor finalizado!")
+
     def recv(self):
+        x=None
         try:
             message = self.client_socket.recv(self.trans).decode()
             if not message:
                 self.ence()
             self.client_socket.settimeout(None)
             va, me = validator(message)
-            if not va:
-                return me['inf']
+            me = me['inf']
+            if me == 'jnhvcdtyGHAJHDGDHgftghjnhbftryuikjnbhgvfrtyuiokmnbvgcfrtyuikjnbhvcfrtyui75414578445445741574':
+                x = True
+            elif not va:
+                return me
         except:
             self.ence()
+        if x:
+            self.client_socket.close()
+            raise Exception("Servidor finalizado pelo cliente!")
 
     def ence(self):
         x = None
@@ -121,9 +125,7 @@ class se:
                 # Aceita uma nova conexão
                 self.client_socket, self.client_address = self.server_socket.accept()
                 self.client_socket.settimeout(300)
-                print("cliente aceito")
                 x = True
             except Exception as e:
-                print(e)
                 pass
             sleep(1)
