@@ -4,7 +4,7 @@ with open("README.md", "r") as arq:
     readme = arq.read()
 
 setup(name='micropython_wifi_communication',
-    version='0.0.6',
+    version='0.0.7',
     license='MIT License',
     author='issei momonge',
     long_description=readme,
