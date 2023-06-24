@@ -1,18 +1,20 @@
 import socket
+
 netw = True
 try:
     import network
 except:
     netw = False
 from comu.util import validator, ip
+from time import sleep
 
 
 class se:
 
     def __init__(self, net=None, Host='50.1', tr=1024, conecao=False):
         self.trans = tr
-        self.HOST = '192.168.' + Host  # Endereço IP do servidor
-        self.PORT = 1234  # self.PORTa para comunicação
+        self.HOST = Host  # Endereço IP do servidor
+        self.PORT = 1238  # self.PORTa para comunicação
         self.net = net
         self.conecao = conecao
         x = None
@@ -20,8 +22,10 @@ class se:
             try:
                 self.cone()
                 x = True
-            except:
+            except Exception as e:
+                print(e)
                 pass
+            sleep(1)
 
         # Cria o socket TCP/IP
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -42,9 +46,9 @@ class se:
         conecao = self.conecao
         global netw
         ap_config = (self.HOST, '255.255.0.0', self.HOST, '255.255.0.0')
+        if type(net) != dict:
+            net = {}
         if net and netw:
-            if type(net) != dict:
-                net = {}
             SSID = 'MinhaRedeWiFI'  # Nome da rede Wi-Fi
             if 'SSID' in net:
                 SSID = net['SSID']
@@ -53,7 +57,7 @@ class se:
                 PASSWORD = net['PASSWORD']
 
             # Configura o ponto de acesso Wi-Fi
-            if conecao:
+            if not conecao:
                 ap = network.WLAN(network.AP_IF)
                 ap.active(True)
                 if PASSWORD != '':
@@ -69,22 +73,22 @@ class se:
                 if not sta_if.isconnected():
                     print('Conectando-se à rede Wi-Fi...')
                     sta_if.active(True)
-                    ssid = 'MinhaRedeWiFI'
-                    if 'ssid' in net:
-                        ssid = net['ssid']
-                    password = 'MinhaSenha123'
-                    if 'password' in net:
-                        password = net['password']
-                    if password != '':
-                        sta_if.connect(ssid, password)
+                    if PASSWORD != '':
+                        print(SSID, PASSWORD)
+                        sta_if.connect(SSID, PASSWORD)
                     else:
-                        sta_if.connect(ssid)
+                        sta_if.connect(SSID)
                     while not sta_if.isconnected():
                         pass
-                    ap_config = ip(self.HOST,sta_if.ifconfig())
-                    self.HOST = ap_config[0]
-
-                    sta_if.ifconfig(ap_config)
+                print(sta_if.ifconfig())
+                print(ip(self.HOST, sta_if.ifconfig(),se=True))
+                ap_config = ip(self.HOST, sta_if.ifconfig(),se=True)
+                self.HOST = ap_config[0]
+                print(self.HOST, ap_config)
+                sta_if.ifconfig(ap_config)
+                print(sta_if.ifconfig())
+        else:
+            self.HOST = ip(self.HOST,se=True)[0]
 
     def send(self, data):
         try:
@@ -122,3 +126,4 @@ class se:
             except Exception as e:
                 print(e)
                 pass
+            sleep(1)

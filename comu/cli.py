@@ -20,8 +20,9 @@ class ci:
                 pass
             sleep(1)
         self.trans = tr
-        self.HOST = '192.168.' + Host  # Endereço IP do servidor
+        self.HOST = Host  # Endereço IP do servidor
         self.HOST = ip(self.HOST)[0]
+        print(self.HOST)
         self.PORT = 1234  # Porta para comunicação
 
         # Cria o socket TCP/IP

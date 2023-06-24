@@ -41,7 +41,7 @@ def get_ip_and_netmask_in_windos():
 
     return None, None  # Retorna None se não encontrou as informações
 
-def ip(host,ipmsk=None):
+def ip(host,ipmsk=None,se=None):
     host1 = None
     mask1 = None
     host2 = None
@@ -53,6 +53,9 @@ def ip(host,ipmsk=None):
         host1, mask1 = get_ip_and_netmask_in_windos()
         host2 = host1
         mask2 = mask1
+        if se:
+            print(f'Host para ser adicionado no esp32: {host1}')
+            return (host1,mask1,host1,mask1)
     mascara = mask1.split('.')
     hostpadrao = host1.split('.')
     ipfinal = ''
