@@ -1,6 +1,10 @@
 import socket
-import network
-from comu.util import validator
+netw = True
+try:
+    import network
+except:
+    netw = False
+from comu.util import validator, ip
 from time import sleep
 
 class ci:
@@ -17,6 +21,7 @@ class ci:
             sleep(1)
         self.trans = tr
         self.HOST = '192.168.' + Host  # Endereço IP do servidor
+        self.HOST = ip(self.HOST)[0]
         self.PORT = 1234  # Porta para comunicação
 
         # Cria o socket TCP/IP
@@ -27,8 +32,9 @@ class ci:
         self.client_socket.settimeout(300)
 
     def cone(self):
+        global netw
         net = self.net
-        if net:
+        if net and netw:
             if type(net) != dict:
                 net = {}
             sta_if = network.WLAN(network.STA_IF)
