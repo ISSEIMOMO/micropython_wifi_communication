@@ -22,25 +22,21 @@ def validator(item):
 
 def get_ip_and_netmask_in_windos():
     import subprocess
-    import re
-    # Executa o comando ipconfig
-    output = subprocess.check_output('ipconfig', shell=True).decode('latin-1')
-    output = output.split('Adaptador de Rede sem Fio Wi-Fi:')[1]
+    resultado = subprocess.run(['ipconfig'], capture_output=True, text=True)
+    output = resultado.stdout
 
-    # Procura pelo endereço IP da rede e pela máscara de rede na saída
-    ip_regex = r"IPv4. .+?: ([\d.]+)"
-    mask_regex = r"Sub-rede . .+?: ([\d.]+)"
-
-    ip_match = re.search(ip_regex, output)
-    mask_match = re.search(mask_regex, output)
-
-    if ip_match and mask_match:
-        ip_address = ip_match.group(1)
-        netmask = mask_match.group(1)
-
-        return ip_address, netmask
-
-    return None, None  # Retorna None se não encontrou as informações
+    # Analisa a saída para encontrar o endereço IP
+    linhas = output.split('\n')
+    reip = []
+    rema = []
+    for linha in linhas:
+        if 'IPv4' in linha:
+            ip = linha.split(':')[1].strip()
+            reip.append(ip)
+        elif 'Sub-rede' in linha:
+            ma = linha.split(':')[1].strip()
+            rema.append(ma)
+    return reip[len(reip) - 1], rema[len(rema)-1]
 
 def ip(host,ipmsk=None,se=None):
     host1 = None
